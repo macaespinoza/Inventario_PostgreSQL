@@ -1,6 +1,8 @@
 # Sistema de Gestión de Inventario - UPGRADE v2.0
+# EVALUACIÓN DE PORTAFOLIO - MÓDULO 05
+## ALUMNA: MACARENA ESPINOZA GATICA
 
-> **Nota:** Esta es una versión mejorada del sistema original. Se encuentra en un branch separado de GitHub con una estructura completamente normalizada.
+> **Nota:** Esta es una versión mejorada de la Evaluación de Módulo 05. Se encuentra en un nuevo branch con una estructura completamente normalizada que se ajusta mejor a la lógica de negocio.
 
 ## Descripción
 
