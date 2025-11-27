@@ -1,0 +1,79 @@
+Modelo desarrollado en https://www.mermaidchart.com/
+---
+config:
+  layout: elk
+  theme: redux-dark-color
+---
+erDiagram
+    PROVEEDORES {
+        int id_proveedor PK
+        varchar nombre
+        varchar direccion
+        varchar telefono
+        varchar email
+    }
+    PRODUCTOS {
+        int id_producto PK
+        varchar nombre
+        text descripcion
+        decimal precio
+        int cantidad_inventario
+        int id_proveedor FK
+    }
+    CLIENTES {
+        int id_cliente PK
+        varchar nombre
+        varchar email
+        varchar telefono
+    }
+    LOCALES {
+        int id_local PK
+        varchar nombre
+        varchar ciudad
+        varchar direccion
+    }
+    METODOS_PAGO {
+        int id_metodo PK
+        varchar nombre
+    }
+    COMPRAS {
+        int id_compra PK
+        date fecha
+        decimal total
+        int id_proveedor FK
+        int id_local FK
+    }
+    DETALLE_COMPRAS {
+        int id_detalle_compra PK
+        int id_compra FK
+        int id_producto FK
+        int cantidad
+        decimal precio_unitario
+        decimal subtotal
+    }
+    VENTAS {
+        int id_venta PK
+        date fecha
+        decimal total
+        int id_cliente FK
+        int id_local FK
+        int id_metodo FK
+    }
+    DETALLE_VENTAS {
+        int id_detalle_venta PK
+        int id_venta FK
+        int id_producto FK
+        int cantidad
+        decimal precio_unitario
+        decimal subtotal
+    }
+    PROVEEDORES ||--o{ PRODUCTOS : "suministra"
+    PROVEEDORES ||--o{ COMPRAS : "participa en"
+    LOCALES ||--o{ COMPRAS : "registra"
+    COMPRAS ||--o{ DETALLE_COMPRAS : "contiene"
+    PRODUCTOS ||--o{ DETALLE_COMPRAS : "incluido en"
+    CLIENTES ||--o{ VENTAS : "realiza"
+    LOCALES ||--o{ VENTAS : "registra"
+    METODOS_PAGO ||--o{ VENTAS : "se usa en"
+    VENTAS ||--o{ DETALLE_VENTAS : "contiene"
+    PRODUCTOS ||--o{ DETALLE_VENTAS : "incluido en"

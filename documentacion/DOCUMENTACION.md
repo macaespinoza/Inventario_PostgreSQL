@@ -1,5 +1,5 @@
 # BOOTCAMP FULL STACK JAVASCRIPT
-# M05 - EVALUACIÓN DE MÓDULO
+# M05 - EVALUACIÓN DE PORTAFOLIO
 # ALUMNA: MACARENA ESPINOZA GATICA
 --------------------------------------------------------------------------------
 
@@ -7,99 +7,124 @@
 
 ## 1. MODELO DE DATOS
 
-**Notas:** 
-- El diagrama entidad-relación completo está disponible en el archivo `diagrama_modelo_relacional.mermaid` así como su representación visual en el archivo `diagrama_modelo_relacional.png`.
-- Se incluyen capturas de las consultas realizadas en el archivo `capturas_consultas_sql.pdf`
-
 ### Entidades Principales
 
 **PROVEEDORES**
-- Atributos: id_proveedor (PK), nombre, dirección, teléfono, email (UK - UNIQUE)
-- Descripción: Almacena información de los proveedores que suministran productos
+- Atributos: id_proveedor (PK), nombre, dirección, teléfono, email (UK)
+- Suministran productos y participan en compras
 
 **PRODUCTOS**
 - Atributos: id_producto (PK), nombre, descripción, precio, cantidad_inventario, id_proveedor (FK)
-- Descripción: Registra los productos disponibles en el inventario
+- Productos en el catálogo del inventario
 
-**TRANSACCIONES**
-- Atributos: id_transaccion (PK), tipo, fecha, cantidad, id_producto (FK), id_proveedor (FK)
-- Descripción: Registra las operaciones de compra y venta
+**CLIENTES**
+- Atributos: id_cliente (PK), nombre, email, teléfono
+- Realizan compras en el comercio
+
+**LOCALES**
+- Atributos: id_local (PK), nombre, ciudad, dirección
+- Sucursales donde se registran operaciones
+
+**METODOS_PAGO**
+- Atributos: id_metodo (PK), nombre
+- Formas de pago disponibles para ventas
+
+### Módulo de Compras (Entrada de Inventario)
+
+**COMPRAS**
+- Atributos: id_compra (PK), fecha, total, id_proveedor (FK), id_local (FK)
+- Registro de compras a proveedores
+
+**DETALLE_COMPRAS**
+- Atributos: id_detalle_compra (PK), id_compra (FK), id_producto (FK), cantidad, precio_unitario, subtotal
+- Productos incluidos en cada compra
+
+### Módulo de Ventas (Salida de Inventario)
+
+**VENTAS**
+- Atributos: id_venta (PK), fecha, total, id_cliente (FK), id_local (FK), id_metodo (FK)
+- Registro de ventas a clientes
+
+**DETALLE_VENTAS**
+- Atributos: id_detalle_venta (PK), id_venta (FK), id_producto (FK), cantidad, precio_unitario, subtotal
+- Productos incluidos en cada venta
 
 ### Relaciones
+
+**Productos y Proveedores:**
 - Un PROVEEDOR suministra muchos PRODUCTOS (1:N)
-- Un PROVEEDOR participa en muchas TRANSACCIONES (1:N)
-- Un PRODUCTO tiene muchas TRANSACCIONES (1:N)
+
+**Compras:**
+- Un PROVEEDOR participa en muchas COMPRAS (1:N)
+- Un LOCAL registra muchas COMPRAS (1:N)
+- Una COMPRA contiene muchos DETALLE_COMPRAS (1:N)
+- Un PRODUCTO se incluye en muchos DETALLE_COMPRAS (1:N)
+
+**Ventas:**
+- Un CLIENTE realiza muchas VENTAS (1:N)
+- Un LOCAL registra muchas VENTAS (1:N)
+- Un METODO_PAGO se usa en muchas VENTAS (1:N)
+- Una VENTA contiene muchos DETALLE_VENTAS (1:N)
+- Un PRODUCTO se incluye en muchos DETALLE_VENTAS (1:N)
 
 ## 2. NORMALIZACIÓN
 
-El modelo está normalizado hasta la Tercera Forma Normal (3FN):
-- Todos los atributos contienen valores atómicos
-- No hay dependencias parciales
-- No hay dependencias transitivas
+Modelo normalizado hasta 3FN:
+- Valores atómicos en todos los atributos
+- Sin dependencias parciales
+- Sin dependencias transitivas
+- Separación clara entre compras y ventas
 
-**Ventajas:**
-- Elimina redundancia de datos
-- Facilita el mantenimiento
-- Asegura la integridad de los datos
+**Mejoras del modelo:**
+- Separa operaciones de entrada (compras) y salida (ventas)
+- Permite múltiples productos por operación
+- Facilita auditoría y análisis de negocio
 
 ## 3. RESTRICCIONES DE INTEGRIDAD
 
-**Integridad de entidad:**
-- PRIMARY KEY en todas las tablas
+**Claves primarias:** Todas las tablas tienen PK
 
-**Integridad referencial:**
-- FOREIGN KEY en transacciones y productos
-- ON DELETE RESTRICT para evitar eliminación de registros con dependencias
+**Claves foráneas:** 
+- ON DELETE RESTRICT para datos maestros
+- ON DELETE CASCADE para detalles de compras/ventas
 
-**Restricciones de dominio:**
-- precio > 0
-- cantidad_inventario >= 0
-- tipo IN ('compra', 'venta')
-- cantidad > 0
-- email UNIQUE
+**Constraints de dominio:**
+- Precios y totales > 0
+- Cantidades > 0 en detalles, >= 0 en inventario
+- Emails con formato válido (@)
 
-## 4. FUNCIONALIDADES
+## 4. DIAGRAMAS
 
-### Funciones Implementadas
-- **registrar_venta()**: Valida inventario antes de registrar venta
-- **registrar_compra()**: Registra compra y actualiza inventario
+Los modelos visuales están en la carpeta `modelos/`:
+- `modelo_conceptual.mermaid` - Diagrama conceptual con flujos de negocio
+- `modelo_logico.mermaid` - Diagrama ER completo
+- `modelo_fisico.sql` - Script de creación de base de datos
 
-### Vistas Creadas
-- **vista_inventario**: Resume el estado del inventario
-- **vista_transacciones**: Historial detallado de transacciones
+## 5. CONSULTAS IMPLEMENTADAS
 
-### Índices para Optimización
-- idx_transacciones_fecha
-- idx_transacciones_tipo
-- idx_transacciones_producto
-- idx_productos_nombre
+El archivo `gestion_inventario.sql` incluye:
 
-## 5. EJEMPLOS DE USO
+**Consultas básicas:**
+- Listado de productos, proveedores, clientes
+- Vista completa de compras con detalles
+- Vista completa de ventas con detalles
+- Productos por proveedor
 
-**Registrar una compra:**
-```sql
-SELECT registrar_compra(id_producto, cantidad, id_proveedor);
-```
-
-**Registrar una venta:**
-```sql
-SELECT registrar_venta(id_producto, cantidad, id_proveedor);
-```
-
-**Consultar inventario:**
-```sql
-SELECT * FROM vista_inventario;
-```
-
-**Ver transacciones recientes:**
-```sql
-SELECT * FROM vista_transacciones ORDER BY fecha DESC;
-```
+**Análisis de negocio:**
+- Total de ventas por producto
+- Total de compras por producto
+- Resumen de ingresos por cliente
+- Resumen de compras por proveedor
+- Ventas por local
+- Métodos de pago más utilizados
 
 ## 6. DATOS DE PRUEBA
 
 El sistema incluye:
 - 3 proveedores
 - 5 productos
-- 10 transacciones (5 compras, 5 ventas)
-
+- 4 clientes
+- 3 locales
+- 5 métodos de pago
+- 5 compras con detalles
+- 5 ventas con detalles

@@ -1,9 +1,21 @@
-# Sistema de Gestión de Inventario
+# Sistema de Gestión de Inventario - UPGRADE v2.0
+
+> **Nota:** Esta es una versión mejorada del sistema original. Se encuentra en un branch separado de GitHub con una estructura completamente normalizada.
 
 ## Descripción
-Sistema de gestión de inventario que permite administrar productos, proveedores y transacciones de compra/venta.
+
+Sistema de gestión de inventario con módulos separados para **compras** (entrada) y **ventas** (salida), permitiendo gestionar productos, proveedores, clientes, locales y métodos de pago.
+
+## Mejoras de esta Versión
+
+- ✅ Separación de COMPRAS y VENTAS (antes tabla única TRANSACCIONES)
+- ✅ Tablas de detalle para múltiples productos por operación
+- ✅ Nuevas entidades: CLIENTES, LOCALES, METODOS_PAGO
+- ✅ Modelo más normalizado y escalable
+- ✅ Consultas de análisis de negocio incluidas
 
 ## Requisitos
+
 - PostgreSQL 12 o superior
 
 ## Instalación
@@ -16,45 +28,39 @@ CREATE DATABASE gestion_inventario;
 
 2. Ejecutar el script:
 ```bash
-psql -U tu_usuario -d gestion_inventario -f sistema_inventario.sql
+psql -U tu_usuario -d gestion_inventario -f gestion_inventario.sql
 ```
 
 ## Estructura de Tablas
 
-- **productos**: Información de productos e inventario
-- **proveedores**: Datos de proveedores
-- **transacciones**: Registro de compras y ventas
+**Entidades maestras:**
+- `proveedores` - Proveedores de productos
+- `productos` - Catálogo de productos
+- `clientes` - Clientes del comercio
+- `locales` - Sucursales
+- `metodos_pago` - Formas de pago
 
-## Funcionalidades Principales
+**Módulo de compras:**
+- `compras` - Encabezados de compras
+- `detalle_compras` - Productos por compra
 
-- Gestión de productos (CRUD)
-- Registro de proveedores
-- Transacciones de compra/venta con actualización automática de inventario
-- Vistas para consultas de inventario y transacciones
+**Módulo de ventas:**
+- `ventas` - Encabezados de ventas
+- `detalle_ventas` - Productos por venta
 
-## Ejemplos de Uso
 
-**Registrar una venta:**
-```sql
-SELECT registrar_venta(1, 5, 1);
-```
+## Documentación
 
-**Registrar una compra:**
-```sql
-SELECT registrar_compra(2, 50, 2);
-```
+Ver `DOCUMENTACION.md` para detalles completos del modelo de datos, relaciones y normalización.
 
-**Ver inventario:**
-```sql
-SELECT * FROM vista_inventario;
-```
+## Modelos Visuales
 
-**Ver transacciones:**
-```sql
-SELECT * FROM vista_transacciones ORDER BY fecha DESC;
-```
+- `modelos/modelo_conceptual.mermaid` - Diagrama de flujos de negocio
+- `modelos/modelo_logico.mermaid` - Diagrama entidad-relación
+- `modelos/modelo_fisico.sql` - DDL completo
 
 ## Autor
-Evaluación Módulo 05 - Bootcamp Full-Stack
-Alumna: Macarena Espinoza Gatica
+
+Evaluación de Portafolio - Módulo 05 - Bootcamp Full-Stack JavaScript  
+Alumna: Macarena Espinoza Gatica  
 2025
